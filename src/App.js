@@ -1,5 +1,7 @@
 import { useState } from "react";
 import useLocalStorage from "./useLocalStorage";
+import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
+import Quiz from "./quiz";
 
 const TOPICS = [
   { name: "Tables, rows and columns", hint: "the basics" },
@@ -200,7 +202,7 @@ function Log() {
   );
 }
 
-function App() {
+function Home() {
   return (
     <div className="max-w-3xl mx-auto px-5">
       <header className="pt-16 pb-8">
@@ -219,6 +221,26 @@ function App() {
         Built with React and Tailwind CSS.
       </footer>
     </div>
+  );
+}
+console.log(typeof Quiz, typeof Home, typeof NavLink, typeof Routes, typeof BrowserRouter);
+const navClass = ({ isActive }) =>
+  isActive
+    ? "underline decoration-4 decoration-sun underline-offset-4"
+    : "opacity-70 hover:opacity-100";
+
+function App() {
+  return (
+    <BrowserRouter>
+      <nav className="max-w-3xl mx-auto px-5 pt-6 flex gap-6 font-bold">
+        <NavLink to="/" end className={navClass}>Notes</NavLink>
+        <NavLink to="/quiz" className={navClass}>Quiz</NavLink>
+      </nav>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/quiz" element={<Quiz />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
