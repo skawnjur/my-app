@@ -1,4 +1,5 @@
 import { useState } from "react";
+import useLocalStorage from "./useLocalStorage";
 
 const TOPICS = [
   { name: "Tables, rows and columns", hint: "the basics" },
@@ -44,7 +45,7 @@ function Progress({ done, total }) {
 }
 
 function Topics() {
-  const [checked, setChecked] = useState([]);
+ const [checked, setChecked] = useLocalStorage("topics-checked", []);
   const toggle = (i) =>
     setChecked((c) => (c.includes(i) ? c.filter((x) => x !== i) : [...c, i]));
 
@@ -148,7 +149,7 @@ function Schema() {
 
 function Log() {
   const [text, setText] = useState("");
-  const [entries, setEntries] = useState([]);
+  const [entries, setEntries] = useLocalStorage("log-entries", []);
 
   const add = (e) => {
     e.preventDefault();
@@ -157,6 +158,8 @@ function Log() {
     setEntries([v, ...entries]);
     setText("");
   };
+
+  const remove = (i) => setEntries(entries.filter((_, idx) => idx !== i));
 
   return (
     <Section title="Today's study log">
@@ -180,7 +183,16 @@ function Log() {
       ) : (
         <ul className="mt-4 pl-5 list-disc">
           {entries.map((e, i) => (
-            <li key={i} className="mb-1">{e}</li>
+          <li key={i} className="mb-1">
+  {e}
+  <button
+    onClick={() => remove(i)}
+    aria-label={`Delete entry: ${e}`}
+    className={`ml-3 text-sm underline text-ink/70 hover:text-ink ${focusRing}`}
+  >
+    Delete
+  </button>
+</li>
           ))}
         </ul>
       )}
